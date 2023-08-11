@@ -6,7 +6,7 @@ Welcome to the DNS Lookup Tool repository! This tool is currently under developm
 
 - [x] Perform DNS lookups for domain names.
 - [x] View IP addresses associated with a domain.
-- [ ] Retrieve MX records for email server information.
+- [x] Retrieve MX records for email server information.
 - [ ] Fast and reliable DNS queries.
 
 ## Getting Started
