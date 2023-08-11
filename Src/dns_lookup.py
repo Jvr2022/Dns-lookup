@@ -11,11 +11,30 @@ def view_ip_addresses(domain):
     except socket.gaierror:
         return ["DNS lookup failed for {}".format(domain)]
 
+def retrieve_mx_records(domain):
+    try:
+        mx_records = []
+        answers = socket.getaddrinfo(domain, None, socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP)
+        
+        for answer in answers:
+            if answer[1] == socket.SOCK_STREAM:
+                mx_records.append(answer[4][0])
+        
+        return mx_records
+    except socket.gaierror:
+        return ["DNS lookup failed for {}".format(domain)]
+
 if __name__ == "__main__":
     domain_name = input("Enter the domain name: ")
-    result = view_ip_addresses(domain_name)
+    ip_result = view_ip_addresses(domain_name)
+    mx_result = retrieve_mx_records(domain_name)
     
-    if result[0].startswith("DNS lookup failed"):
-        print(result[0])
+    if ip_result[0].startswith("DNS lookup failed"):
+        print(ip_result[0])
     else:
-        print("IP addresses for {} are: {}".format(domain_name, ', '.join(result)))
+        print("IP addresses for {} are: {}".format(domain_name, ', '.join(ip_result)))
+
+    if mx_result[0].startswith("DNS lookup failed"):
+        print(mx_result[0])
+    else:
+        print("MX records for {} are: {}".format(domain_name, ', '.join(mx_result)))
