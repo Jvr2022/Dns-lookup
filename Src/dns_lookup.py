@@ -1,8 +1,10 @@
 import socket
 
+DNS_SERVER = "8.8.8.8"
+
 def view_ip_addresses(domain):
     try:
-        ip_addresses = socket.getaddrinfo(domain, None)
+        ip_addresses = socket.getaddrinfo(domain, None, socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP, socket.AI_ADDRCONFIG)
         ipv4_set = set(ip[4][0] for ip in ip_addresses if ip[1] == socket.AF_INET)
         ipv6_set = set(ip[4][0] for ip in ip_addresses if ip[1] == socket.AF_INET6)
         
@@ -38,3 +40,9 @@ if __name__ == "__main__":
         print(mx_result[0])
     else:
         print("MX records for {} are: {}".format(domain_name, ', '.join(mx_result)))
+
+    try:
+        dns_query = socket.gethostbyname(domain_name)
+        print("Fast and reliable DNS query for {} is: {}".format(domain_name, dns_query))
+    except socket.gaierror:
+        print("DNS query failed for {}".format(domain_name))
