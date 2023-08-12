@@ -10,7 +10,7 @@ Welcome to the DNS Lookup Tool repository! This tool is currently under developm
 - [x] Fast and reliable DNS queries.
 - [x] Geolocation of IP addresses.
 - [x] Reverse DNS lookup for IP addresses.
-- [ ] Check domain availability.
+- [x] Check domain availability.
 - [ ] Identify DNS propagation status.
 - [ ] DNS record type selection (A, AAAA, CNAME, TXT, etc.).
 - [ ] Export query results to a file.
