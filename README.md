@@ -8,7 +8,7 @@ Welcome to the DNS Lookup Tool repository! This tool is currently under developm
 - [x] View IP addresses associated with a domain.
 - [x] Retrieve MX records for email server information.
 - [x] Fast and reliable DNS queries.
-- [ ] Geolocation of IP addresses.
+- [x] Geolocation of IP addresses.
 - [ ] Reverse DNS lookup for IP addresses.
 - [ ] Check domain availability.
 - [ ] Identify DNS propagation status.
