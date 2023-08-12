@@ -76,6 +76,10 @@ def check_dns_propagation_status(domain):
             return "DNS propagation for {} is not complete yet.".format(domain)
     except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer):
         return "DNS propagation status check failed for {}.".format(domain)
+
+def export_to_file(filename, content):
+    with open(filename, "w") as file:
+        file.write(content)
         
 def select_dns_record_type():
     print("\nSelect a DNS record type:")
@@ -101,38 +105,50 @@ if __name__ == "__main__":
     domain_name = input("Enter the domain name: ")
     
     availability_result = check_domain_availability(domain_name)
-    print("\nDomain availability check for {}:".format(domain_name))
-    print("- {}".format(availability_result))
-    
     dns_propagation_result = check_dns_propagation_status(domain_name)
-    print("\nDNS propagation status check for {}:".format(domain_name))
-    print("- {}".format(dns_propagation_result))
-    
-    record_type = select_dns_record_type()  
+    record_type = select_dns_record_type()
     
     ip_result = view_ip_addresses(domain_name)
     mx_result = retrieve_mx_records(domain_name)
     
     if ip_result[0].startswith("DNS lookup failed"):
-        print(ip_result[0])
+        ip_output = ip_result[0]
     else:
-        print("\nIP addresses for {} are:".format(domain_name))
-        for ip in ip_result:
-            city, region, country = get_ip_geolocation(ip)
-            print("- IP address {}: {}, {}, {}".format(ip, city, region, country))
+        ip_output = "\nIP addresses for {} are:\n- {}".format(domain_name, "\n- ".join(ip_result))
     
     if mx_result[0].startswith("No MX records"):
-        print(mx_result[0])
+        mx_output = mx_result[0]
     else:
-        print("\nMX records for {} are:".format(domain_name))
-        for mx_server in mx_result:
-            print("- {}".format(mx_server))
+        mx_output = "\nMX records for {} are:\n- {}".format(domain_name, "\n- ".join(mx_result))
     
     dns_query_result = fast_dns_query(domain_name)
-    print("\nFast and reliable DNS query for {} is:".format(domain_name))
-    print("- {}".format(dns_query_result))
-    
     ip_address = dns_query_result
     reverse_dns_result = reverse_dns_lookup(ip_address)
-    print("\nReverse DNS lookup for {} is:".format(ip_address))
-    print("- {}".format(reverse_dns_result))
+    
+    output = f"""
+Domain availability check for {domain_name}:
+- {availability_result}
+
+DNS propagation status check for {domain_name}:
+- {dns_propagation_result}
+
+Selected DNS record type: {record_type}
+
+{ip_output}
+
+{mx_output}
+
+Fast and reliable DNS query for {domain_name} is:
+- {dns_query_result}
+
+Reverse DNS lookup for {ip_address} is:
+- {reverse_dns_result}
+    """
+    output_filename = f"{domain_name}_query_results.txt"
+    export_to_file(output_filename, output)
+    
+    print("\nQuery results exported to:", output_filename)
+    
+    # Display query results on the screen
+    print("\nQuery Results:")
+    print(output)
