@@ -63,6 +63,19 @@ def check_domain_availability(domain):
             return "Domain {} is not available.".format(domain)
     except whois.parser.PywhoisError:
         return "Error checking availability for {}.".format(domain)
+        
+def check_dns_propagation_status(domain):
+    try:
+        resolver = dns.resolver.Resolver(configure=False)
+        resolver.nameservers = DNS_SERVERS
+
+        answers = resolver.resolve(domain, 'A')
+        if answers:
+            return "DNS propagation for {} is complete.".format(domain)
+        else:
+            return "DNS propagation for {} is not complete yet.".format(domain)
+    except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer):
+        return "DNS propagation status check failed for {}.".format(domain)
 
 if __name__ == "__main__":
     domain_name = input("Enter the domain name: ")
@@ -70,6 +83,10 @@ if __name__ == "__main__":
     availability_result = check_domain_availability(domain_name)
     print("\nDomain availability check for {}:".format(domain_name))
     print("- {}".format(availability_result))
+    
+    dns_propagation_result = check_dns_propagation_status(domain_name)
+    print("\nDNS propagation status check for {}:".format(domain_name))
+    print("- {}".format(dns_propagation_result))
     
     ip_result = view_ip_addresses(domain_name)
     mx_result = retrieve_mx_records(domain_name)
