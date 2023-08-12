@@ -11,7 +11,7 @@ Welcome to the DNS Lookup Tool repository! This tool is currently under developm
 - [x] Geolocation of IP addresses.
 - [x] Reverse DNS lookup for IP addresses.
 - [x] Check domain availability.
-- [ ] Identify DNS propagation status.
+- [x] Identify DNS propagation status.
 - [ ] DNS record type selection (A, AAAA, CNAME, TXT, etc.).
 - [ ] Export query results to a file.
 - [ ] Support for custom DNS servers.
