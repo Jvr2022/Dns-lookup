@@ -76,6 +76,26 @@ def check_dns_propagation_status(domain):
             return "DNS propagation for {} is not complete yet.".format(domain)
     except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer):
         return "DNS propagation status check failed for {}.".format(domain)
+        
+def select_dns_record_type():
+    print("\nSelect a DNS record type:")
+    print("1. A")
+    print("2. AAAA")
+    print("3. CNAME")
+    print("4. TXT")
+    choice = input("Enter the number of the record type: ")
+    
+    if choice == "1":
+        return "A"
+    elif choice == "2":
+        return "AAAA"
+    elif choice == "3":
+        return "CNAME"
+    elif choice == "4":
+        return "TXT"
+    else:
+        print("Invalid choice. Using default record type: A")
+        return "A"
 
 if __name__ == "__main__":
     domain_name = input("Enter the domain name: ")
@@ -87,6 +107,8 @@ if __name__ == "__main__":
     dns_propagation_result = check_dns_propagation_status(domain_name)
     print("\nDNS propagation status check for {}:".format(domain_name))
     print("- {}".format(dns_propagation_result))
+    
+    record_type = select_dns_record_type()  
     
     ip_result = view_ip_addresses(domain_name)
     mx_result = retrieve_mx_records(domain_name)
