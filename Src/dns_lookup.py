@@ -1,6 +1,7 @@
 import socket
 import requests
 import dns.resolver
+import whois
 
 DNS_SERVERS = ["8.8.8.8", "8.8.4.4"]
 IPINFO_API_URL = "http://ipinfo.io/{}/json"
@@ -53,6 +54,16 @@ def reverse_dns_lookup(ip_address):
     except socket.herror:
         return "Reverse DNS lookup failed for {}".format(ip_address)
 
+def check_domain_availability(domain):
+    try:
+        w = whois.whois(domain)
+        if w.status == None:
+            return "Domain {} is available.".format(domain)
+        else:
+            return "Domain {} is not available.".format(domain)
+    except whois.parser.PywhoisError:
+        return "Error checking availability for {}.".format(domain)
+
 if __name__ == "__main__":
     domain_name = input("Enter the domain name: ")
     ip_result = view_ip_addresses(domain_name)
@@ -85,3 +96,7 @@ if __name__ == "__main__":
         print("- {}".format(reverse_dns_result))
     else:
         print("Reverse DNS lookup skipped.")
+    
+    availability_result = check_domain_availability(domain_name)
+    print("\nDomain availability check for {}:".format(domain_name))
+    print("- {}".format(availability_result))
