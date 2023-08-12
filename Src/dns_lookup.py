@@ -66,13 +66,18 @@ def check_domain_availability(domain):
 
 if __name__ == "__main__":
     domain_name = input("Enter the domain name: ")
+    
+    availability_result = check_domain_availability(domain_name)
+    print("\nDomain availability check for {}:".format(domain_name))
+    print("- {}".format(availability_result))
+    
     ip_result = view_ip_addresses(domain_name)
     mx_result = retrieve_mx_records(domain_name)
     
     if ip_result[0].startswith("DNS lookup failed"):
         print(ip_result[0])
     else:
-        print("IP addresses for {} are:".format(domain_name))
+        print("\nIP addresses for {} are:".format(domain_name))
         for ip in ip_result:
             city, region, country = get_ip_geolocation(ip)
             print("- IP address {}: {}, {}, {}".format(ip, city, region, country))
@@ -88,15 +93,7 @@ if __name__ == "__main__":
     print("\nFast and reliable DNS query for {} is:".format(domain_name))
     print("- {}".format(dns_query_result))
     
-    ip_lookup_choice = input("\nDo you want to perform a reverse DNS lookup? (y/n): ")
-    if ip_lookup_choice.lower() == "y":
-        ip_address = input("Enter the IP address: ")
-        reverse_dns_result = reverse_dns_lookup(ip_address)
-        print("\nReverse DNS lookup for {} is:".format(ip_address))
-        print("- {}".format(reverse_dns_result))
-    else:
-        print("Reverse DNS lookup skipped.")
-    
-    availability_result = check_domain_availability(domain_name)
-    print("\nDomain availability check for {}:".format(domain_name))
-    print("- {}".format(availability_result))
+    ip_address = dns_query_result
+    reverse_dns_result = reverse_dns_lookup(ip_address)
+    print("\nReverse DNS lookup for {} is:".format(ip_address))
+    print("- {}".format(reverse_dns_result))
