@@ -81,32 +81,11 @@ def export_to_file(filename, content):
     with open(filename, "w") as file:
         file.write(content)
         
-def select_dns_record_type():
-    print("\nSelect a DNS record type:")
-    print("1. A")
-    print("2. AAAA")
-    print("3. CNAME")
-    print("4. TXT")
-    choice = input("Enter the number of the record type: ")
-    
-    if choice == "1":
-        return "A"
-    elif choice == "2":
-        return "AAAA"
-    elif choice == "3":
-        return "CNAME"
-    elif choice == "4":
-        return "TXT"
-    else:
-        print("Invalid choice. Using default record type: A")
-        return "A"
-
 if __name__ == "__main__":
     domain_name = input("Enter the domain name: ")
     
     availability_result = check_domain_availability(domain_name)
     dns_propagation_result = check_dns_propagation_status(domain_name)
-    record_type = select_dns_record_type()
     
     ip_result = view_ip_addresses(domain_name)
     mx_result = retrieve_mx_records(domain_name)
@@ -132,8 +111,6 @@ Domain availability check for {domain_name}:
 DNS propagation status check for {domain_name}:
 - {dns_propagation_result}
 
-Selected DNS record type: {record_type}
-
 {ip_output}
 
 {mx_output}
@@ -143,7 +120,7 @@ Fast and reliable DNS query for {domain_name} is:
 
 Reverse DNS lookup for {ip_address} is:
 - {reverse_dns_result}
-    """
+"""
     output_filename = f"{domain_name}_query_results.txt"
     export_to_file(output_filename, output)
     
