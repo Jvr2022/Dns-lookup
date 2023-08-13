@@ -16,7 +16,7 @@ We encourage you to provide feedback, report any issues you encounter, and contr
 - [x] Check domain availability.
 - [x] Identify DNS propagation status.
 - [x] Export query results to a file.
-- [ ] Support for custom DNS servers.
+- [x] Support for custom DNS servers.
 - [ ] DNSSEC validation status.
 - [ ] Comprehensive error handling and reporting.
 
