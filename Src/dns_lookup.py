@@ -20,7 +20,7 @@ def view_ip_addresses(domain):
 def retrieve_mx_records(domain):
     try:
         resolver = dns.resolver.Resolver(configure=False)
-        resolver.nameservers = DNS_SERVERS
+        resolver.nameservers = ['8.8.8.8', '8.8.4.4']  # Default DNS servers
         
         mx_records = []
         answers = resolver.resolve(domain, 'MX')
@@ -80,9 +80,19 @@ def check_dns_propagation_status(domain):
 def export_to_file(filename, content):
     with open(filename, "w") as file:
         file.write(content)
-        
+
 if __name__ == "__main__":
     domain_name = input("Enter the domain name: ")
+    
+    use_custom_dns = input("Do you want to use custom DNS servers? (y/n): ").lower()
+    if use_custom_dns == 'y':
+        custom_dns_servers = input("Enter custom DNS servers (comma-separated): ")
+        custom_dns_list = custom_dns_servers.split(',')
+        resolver = dns.resolver.Resolver(configure=False)
+        resolver.nameservers = custom_dns_list
+    else:
+        resolver = dns.resolver.Resolver(configure=False)
+        resolver.nameservers = ['8.8.8.8', '8.8.4.4']  # Default DNS servers
     
     availability_result = check_domain_availability(domain_name)
     dns_propagation_result = check_dns_propagation_status(domain_name)
