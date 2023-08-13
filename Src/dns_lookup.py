@@ -68,7 +68,7 @@ def check_dns_propagation_status(domain):
     try:
         resolver = dns.resolver.Resolver(configure=False)
         resolver.nameservers = DNS_SERVERS
-
+        
         answers = resolver.resolve(domain, 'A')
         if answers:
             return "DNS propagation for {} is complete.".format(domain)
@@ -76,6 +76,19 @@ def check_dns_propagation_status(domain):
             return "DNS propagation for {} is not complete yet.".format(domain)
     except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer):
         return "DNS propagation status check failed for {}.".format(domain)
+        
+def check_dnssec_validation(domain):
+    try:
+        resolver = dns.resolver.Resolver(configure=False)
+        resolver.nameservers = DNS_SERVERS
+        
+        answers = resolver.resolve(domain, 'DS')
+        if answers:
+            return "DNSSEC validation for {} is enabled.".format(domain)
+        else:
+            return "DNSSEC validation for {} is not enabled.".format(domain)
+    except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer):
+        return "DNSSEC validation status check failed for {}.".format(domain)
 
 def export_to_file(filename, content):
     with open(filename, "w") as file:
@@ -96,6 +109,7 @@ if __name__ == "__main__":
     
     availability_result = check_domain_availability(domain_name)
     dns_propagation_result = check_dns_propagation_status(domain_name)
+    dnssec_result = check_dnssec_validation(domain_name)
     
     ip_result = view_ip_addresses(domain_name)
     mx_result = retrieve_mx_records(domain_name)
@@ -120,6 +134,9 @@ Domain availability check for {domain_name}:
 
 DNS propagation status check for {domain_name}:
 - {dns_propagation_result}
+
+DNSSEC validation status check for {domain_name}:
+- {dnssec_result}
 
 {ip_output}
 
