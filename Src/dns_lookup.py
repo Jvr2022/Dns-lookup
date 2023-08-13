@@ -14,13 +14,13 @@ def view_ip_addresses(domain):
         
         ip_set = ipv4_set.union(ipv6_set)
         return list(ip_set)
-    except socket.gaierror:
-        return ["DNS lookup failed for {}".format(domain)]
+    except socket.gaierror as e:
+        return ["DNS lookup failed for {}: {}".format(domain, e)]
 
 def retrieve_mx_records(domain):
     try:
         resolver = dns.resolver.Resolver(configure=False)
-        resolver.nameservers = ['8.8.8.8', '8.8.4.4']  # Default DNS servers
+        resolver.nameservers = DNS_SERVERS
         
         mx_records = []
         answers = resolver.resolve(domain, 'MX')
@@ -29,30 +29,30 @@ def retrieve_mx_records(domain):
             mx_records.append(answer.exchange.to_text())
         
         return mx_records
-    except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer):
-        return ["No MX records found for {}".format(domain)]
+    except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer) as e:
+        return ["No MX records found for {}: {}".format(domain, e)]
 
 def get_ip_geolocation(ip_address):
     try:
         response = requests.get(IPINFO_API_URL.format(ip_address))
         data = response.json()
         return data.get("city", "Unknown city"), data.get("region", "Unknown region"), data.get("country", "Unknown country")
-    except requests.RequestException:
-        return "Failed to fetch geolocation"
+    except requests.RequestException as e:
+        return "Failed to fetch geolocation: {}".format(e)
 
 def fast_dns_query(domain):
     try:
         dns_query = socket.gethostbyname(domain)
         return dns_query
-    except socket.gaierror:
-        return "DNS query failed for {}".format(domain)
+    except socket.gaierror as e:
+        return "DNS query failed for {}: {}".format(domain, e)
 
 def reverse_dns_lookup(ip_address):
     try:
         hostnames = socket.gethostbyaddr(ip_address)
         return hostnames[0]
-    except socket.herror:
-        return "Reverse DNS lookup failed for {}".format(ip_address)
+    except socket.herror as e:
+        return "Reverse DNS lookup failed for {}: {}".format(ip_address, e)
 
 def check_domain_availability(domain):
     try:
@@ -61,9 +61,9 @@ def check_domain_availability(domain):
             return "Domain {} is available.".format(domain)
         else:
             return "Domain {} is not available.".format(domain)
-    except whois.parser.PywhoisError:
-        return "Error checking availability for {}.".format(domain)
-        
+    except whois.parser.PywhoisError as e:
+        return "Error checking availability for {}: {}".format(domain, e)
+
 def check_dns_propagation_status(domain):
     try:
         resolver = dns.resolver.Resolver(configure=False)
@@ -74,9 +74,9 @@ def check_dns_propagation_status(domain):
             return "DNS propagation for {} is complete.".format(domain)
         else:
             return "DNS propagation for {} is not complete yet.".format(domain)
-    except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer):
-        return "DNS propagation status check failed for {}.".format(domain)
-        
+    except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer) as e:
+        return "DNS propagation status check failed for {}: {}".format(domain, e)
+
 def check_dnssec_validation(domain):
     try:
         resolver = dns.resolver.Resolver(configure=False)
@@ -87,12 +87,16 @@ def check_dnssec_validation(domain):
             return "DNSSEC validation for {} is enabled.".format(domain)
         else:
             return "DNSSEC validation for {} is not enabled.".format(domain)
-    except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer):
-        return "DNSSEC validation status check failed for {}.".format(domain)
+    except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer) as e:
+        return "DNSSEC validation status check failed for {}: {}".format(domain, e)
 
 def export_to_file(filename, content):
-    with open(filename, "w") as file:
-        file.write(content)
+    try:
+        with open(filename, "w") as file:
+            file.write(content)
+        return "Exported to file: {}".format(filename)
+    except Exception as e:
+        return "Error exporting to file {}: {}".format(filename, e)
 
 if __name__ == "__main__":
     domain_name = input("Enter the domain name: ")
@@ -156,7 +160,7 @@ Reverse DNS lookup for {ip_address} is:
     # Display query results on the screen
     print("\nQuery Results:")
     print(output)
-
+    
 def ask_to_restart():
     while True:
         choice = input("Do you want to start again? (y/n): ").lower()
