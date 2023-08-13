@@ -27,7 +27,7 @@ To get started with the DNS Lookup Tool, follow these steps:
 ### Download the Release
 
 1. Visit the [Releases page](https://github.com/Jvr2022/Dns-lookup/releases) of this repository.
-2. Locate the latest release and download the source code as a ZIP file.
+2. Locate the latest release and download the ZIP file.
 3. Extract the downloaded ZIP file to your desired location.
 
 ### Run the Tool
