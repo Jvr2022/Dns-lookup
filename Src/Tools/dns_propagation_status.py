@@ -27,3 +27,18 @@ if __name__ == "__main__":
     print("\nDNS Propagation Status for {}:".format(domain_name))
     for dns_server, status in propagation_status.items():
         print("- {}: {}".format(dns_server, status))
+
+def ask_to_restart():
+    while True:
+        choice = input("Do you want to start again? (y/n): ").lower()
+        if choice == 'y':
+            return True
+        elif choice == 'n':
+            return False
+        else:
+            print("Invalid choice. Please enter 'y' for yes or 'n' for no.")
+
+if ask_to_restart():
+    pass
+else:
+    print("Program closed.")
