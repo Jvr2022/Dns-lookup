@@ -15,7 +15,6 @@ We encourage you to provide feedback, report any issues you encounter, and contr
 - [x] Reverse DNS lookup for IP addresses.
 - [x] Check domain availability.
 - [x] Identify DNS propagation status.
-- [x] DNS record type selection (A, AAAA, CNAME, TXT, etc.).
 - [x] Export query results to a file.
 - [ ] Support for custom DNS servers.
 - [ ] DNSSEC validation status.
