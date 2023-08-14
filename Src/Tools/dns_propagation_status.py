@@ -15,8 +15,8 @@ def check_dns_propagation(domain):
             end_time = time.time()
             
             propagation_status[dns_server] = "Propagated ({} ms)".format(int((end_time - start_time) * 1000))
-        except dns.exception.DNSException:
-            propagation_status[dns_server] = "Not propagated"
+        except dns.exception.DNSException as e:
+            propagation_status[dns_server] = f"Error: {e}"
     
     return propagation_status
 
