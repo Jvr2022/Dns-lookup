@@ -3,6 +3,7 @@ import requests
 def geolocate_ip_address(ip_address):
     try:
         response = requests.get(f"http://ip-api.com/json/{ip_address}")
+        response.raise_for_status()  # Raise an exception for HTTP errors
         data = response.json()
         
         city = data.get("city", "Unknown")
@@ -11,14 +12,14 @@ def geolocate_ip_address(ip_address):
         
         geolocation_info = f"{city}, {region}, {country}"
         return geolocation_info
-    except requests.exceptions.RequestException:
-        return "Geolocation lookup failed"
+    except requests.exceptions.RequestException as e:
+        return f"Geolocation lookup failed: {e}"
 
 if __name__ == "__main__":
     ip_address = input("Enter an IP address for geolocation: ")
     result = geolocate_ip_address(ip_address)
     
-    if result.startswith("Geolocation lookup failed"):
+    if "failed" in result.lower():
         print(result)
     else:
         print("Geolocation for {} is: {}".format(ip_address, result))
