@@ -7,16 +7,7 @@ def get_ip_address(domain):
     except socket.gaierror:
         return "DNS lookup failed for {}".format(domain)
 
-if __name__ == "__main__":
-    domain_name = input("Enter the domain name: ")
-    ip_address = get_ip_address(domain_name)
-    
-    if ip_address.startswith("DNS lookup failed"):
-        print(ip_address)
-    else:
-        print("IP address of {} is: {}".format(domain_name, ip_address))
-
-  def ask_to_restart():
+def ask_to_restart():
     while True:
         choice = input("Do you want to start again? (y/n): ").lower()
         if choice == 'y':
@@ -26,7 +17,16 @@ if __name__ == "__main__":
         else:
             print("Invalid choice. Please enter 'y' for yes or 'n' for no.")
 
-if ask_to_restart():
-    pass
-else:
-    print("Program closed.")
+if __name__ == "__main__":
+    while True:
+        domain_name = input("Enter the domain name: ")
+        ip_address = get_ip_address(domain_name)
+        
+        if ip_address.startswith("DNS lookup failed"):
+            print(ip_address)
+        else:
+            print("IP address of {} is: {}".format(domain_name, ip_address))
+        
+        if not ask_to_restart():
+            print("Program closed.")
+            break
