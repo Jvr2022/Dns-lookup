@@ -29,3 +29,7 @@ if __name__ == "__main__":
         if not ask_to_restart():
             print("Program closed.")
             break
+
+        print("\nDetailed Query Report:")
+        print("- Domain Name: {}".format(domain_name))
+        print("- Availability: {}".format(result))
