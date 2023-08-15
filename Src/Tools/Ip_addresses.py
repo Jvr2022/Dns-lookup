@@ -7,19 +7,15 @@ def get_ip_address(domain):
     except socket.gaierror:
         return "DNS lookup failed for {}".format(domain)
 
-def ask_to_restart():
-    while True:
-        choice = input("Do you want to start again? (y/n): ").lower()
-        if choice == 'y':
-            return True
-        elif choice == 'n':
-            return False
-        else:
-            print("Invalid choice. Please enter 'y' for yes or 'n' for no.")
+def ask_to_continue():
+    choice = input("Do you want to get the IP address of another domain? (y/n): ").lower()
+    return choice == 'y'
 
 if __name__ == "__main__":
+    print("Welcome to the IP Address Retrieval Tool!")
+
     while True:
-        domain_name = input("Enter the domain name: ")
+        domain_name = input("\nEnter the domain name: ")
         ip_address = get_ip_address(domain_name)
         
         if ip_address.startswith("DNS lookup failed"):
@@ -27,6 +23,6 @@ if __name__ == "__main__":
         else:
             print("IP address of {} is: {}".format(domain_name, ip_address))
         
-        if not ask_to_restart():
-            print("Program closed.")
+        if not ask_to_continue():
+            print("Program closed. Thank you for using the IP Address Retrieval Tool!")
             break
