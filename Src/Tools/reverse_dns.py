@@ -18,8 +18,10 @@ def ask_to_restart():
             print("Invalid choice. Please enter 'y' for yes or 'n' for no.")
 
 if __name__ == "__main__":
+    print("Welcome to the Reverse DNS Lookup Tool!")
+
     while True:
-        ip_address = input("Enter an IP address for reverse DNS lookup: ")
+        ip_address = input("\nEnter an IP address for reverse DNS lookup: ")
         result = reverse_dns_lookup(ip_address)
         
         if "failed" in result.lower():
@@ -27,6 +29,6 @@ if __name__ == "__main__":
         else:
             print("Reverse DNS lookup for {} is: {}".format(ip_address, result))
         
-        if not ask_to_restart():
-            print("Program closed.")
+        if not input("\nDo you want to perform another reverse DNS lookup? (y/n): ").lower() == 'y':
+            print("Program closed. Thank you for using the Reverse DNS Lookup Tool!")
             break
