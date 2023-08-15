@@ -86,6 +86,6 @@ Stay tuned for the release of version 1.0.1, where these exciting features will 
 - [x] Enhanced User Prompts
 - [x] Bug Fixes
 - [x] Stability Improvements
-- [ ] Updated Documentation
+- [x] Updated Documentation
 
 As development progresses, we'll update this checklist to reflect the completion of each feature. Your support and feedback are invaluable in making the DNS Lookup Tool an indispensable resource.
