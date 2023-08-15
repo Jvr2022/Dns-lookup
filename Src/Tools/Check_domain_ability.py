@@ -10,26 +10,13 @@ def check_domain_availability(domain):
     except whois.parser.PywhoisError:
         return "Error checking availability for {}.".format(domain)
 
-def ask_to_restart():
-    while True:
-        choice = input("Do you want to start again? (y/n): ").lower()
-        if choice == 'y':
-            return True
-        elif choice == 'n':
-            return False
-        else:
-            print("Invalid choice. Please enter 'y' for yes or 'n' for no.")
-
 if __name__ == "__main__":
     while True:
         domain_name = input("Enter the domain name: ")
         result = check_domain_availability(domain_name)
         print(result)
         
-        if not ask_to_restart():
+        choice = input("Do you want to start again? (y/n): ").lower()
+        if choice != 'y':
             print("Program closed.")
             break
-
-        print("\nDetailed Query Report:")
-        print("- Domain Name: {}".format(domain_name))
-        print("- Availability: {}".format(result))
