@@ -21,9 +21,15 @@ def retrieve_mx_records(domain):
     except dns.exception.DNSException as e:
         return ["Error retrieving MX records: {}".format(e)]
 
+def ask_to_continue():
+    choice = input("Do you want to retrieve MX records for another domain? (y/n): ").lower()
+    return choice == 'y'
+
 if __name__ == "__main__":
+    print("Welcome to the MX Record Retrieval Tool!")
+
     while True:
-        domain_name = input("Enter the domain name: ")
+        domain_name = input("\nEnter the domain name: ")
         mx_result = retrieve_mx_records(domain_name)
         
         if mx_result[0].startswith("Domain") or mx_result[0].startswith("No MX records") or mx_result[0].startswith("Error"):
@@ -34,7 +40,6 @@ if __name__ == "__main__":
             for mx_server in mx_result:
                 print("- {}".format(mx_server))
         
-        choice = input("Do you want to start again? (y/n): ").lower()
-        if choice != 'y':
-            print("Program closed.")
+        if not ask_to_continue():
+            print("Program closed. Thank you for using the MX Record Retrieval Tool!")
             break
