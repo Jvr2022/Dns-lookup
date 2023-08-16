@@ -8,14 +8,23 @@ IPINFO_API_URL = "http://ipinfo.io/{}/json"
 
 def view_ip_addresses(domain):
     try:
-        ip_addresses = socket.getaddrinfo(domain, None, socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP, socket.AI_ADDRCONFIG)
-        ipv4_set = set(ip[4][0] for ip in ip_addresses if ip[1] == socket.AF_INET)
-        ipv6_set = set(ip[4][0] for ip in ip_addresses if ip[1] == socket.AF_INET6)
+        ipv4_addresses = socket.gethostbyname_ex(domain)[2]
+        ipv6_addresses = set(ip_info[4][0] for ip_info in socket.getaddrinfo(domain, None, socket.AF_INET6))
         
-        ip_set = ipv4_set.union(ipv6_set)
-        return list(ip_set)
+        print("IPv4 addresses:", ipv4_addresses)
+        print("IPv6 addresses:", ipv6_addresses)
+
+        if not ipv4_addresses and not ipv6_addresses:
+            print("No IP addresses found.")
+            return [], []
+
+        return ipv4_addresses, list(ipv6_addresses)
     except socket.gaierror as e:
-        return ["DNS lookup failed for {}: {}".format(domain, e)]
+        print("Error:", e)
+        return [], []
+    except IndexError:
+        print("Index error.")
+        return [], []
 
 def retrieve_mx_records(domain):
     try:
@@ -89,14 +98,13 @@ def check_dnssec_validation(domain):
             return "DNSSEC validation for {} is not enabled.".format(domain)
     except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer) as e:
         return "DNSSEC validation status check failed for {}: {}".format(domain, e)
-        
 
 if __name__ == "__main__":
     print("Welcome to the DNS Lookup Tool!")
-    
+
     while True:
         domain_name = input("\nEnter the domain name: ")
-        
+
         use_custom_dns = input("Do you want to use custom DNS servers? (y/n): ").lower()
         if use_custom_dns == 'y':
             custom_dns_servers = input("Enter custom DNS servers (comma-separated): ")
@@ -107,28 +115,40 @@ if __name__ == "__main__":
             resolver = dns.resolver.Resolver(configure=False)
             resolver.nameservers = ['8.8.8.8', '8.8.4.4']  # Default DNS servers
         
+        output_filename = f"{domain_name}_query_results.txt"  # Define output_filename here
+
         availability_result = check_domain_availability(domain_name)
         dns_propagation_result = check_dns_propagation_status(domain_name)
         dnssec_result = check_dnssec_validation(domain_name)
-        
-        ip_result = view_ip_addresses(domain_name)
-        mx_result = retrieve_mx_records(domain_name)
-        
-        if ip_result[0].startswith("DNS lookup failed"):
-            ip_output = ip_result[0]
+
+        ip_v4_addresses, ip_v6_addresses = view_ip_addresses(domain_name)
+
+        ip_output = ""
+        if ip_v4_addresses or ip_v6_addresses:
+            ip_output = f"IP addresses for {domain_name}:\n"
+            if ip_v4_addresses:
+                ip_output += "\n".join([f"- IPv4 address: {ip}" for ip in ip_v4_addresses])
+            if ip_v6_addresses:
+                ip_output += "\n" + "\n".join([f"- IPv6 address: {ip}" for ip in ip_v6_addresses])
+            if not ip_v4_addresses and not ip_v6_addresses:
+                ip_output += "\n" + f"- Single IP address: {ip_address}"
         else:
-            ip_output = "\nIP addresses for {} are:\n- {}".format(domain_name, "\n- ".join(ip_result))
-        
+            ip_output = f"No IP addresses found for {domain_name}"
+
+        mx_result = retrieve_mx_records(domain_name)
+
         if mx_result[0].startswith("No MX records"):
             mx_output = mx_result[0]
         else:
-            mx_output = "\nMX records for {} are:\n- {}".format(domain_name, "\n- ".join(mx_result))
-        
+            mx_output = "\nMX records for {} are:\n{}".format(domain_name, "\n".join(["- " + mx for mx in mx_result]))
+
         dns_query_result = fast_dns_query(domain_name)
         ip_address = dns_query_result
         reverse_dns_result = reverse_dns_lookup(ip_address)
-        
+
         output = f"""
+Query results exported to: {output_filename}
+
 Domain availability check for {domain_name}:
 - {availability_result}
 
@@ -148,15 +168,12 @@ Fast and reliable DNS query for {domain_name} is:
 Reverse DNS lookup for {ip_address} is:
 - {reverse_dns_result}
 """
-        output_filename = f"{domain_name}_query_results.txt"
-        
+
         with open(output_filename, "w") as file:
             file.write(output)
-        print("\nQuery results exported to:", output_filename)
-        
-        print("\nQuery Results:")
+        print(f"\nQuery results exported to: {output_filename}")
         print(output)
-        
+
         if not input("\nDo you want to perform another query? (y/n): ").lower() == 'y':
             print("Program closed. Thank you for using the DNS Lookup Tool!")
             break
