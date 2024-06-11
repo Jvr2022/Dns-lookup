@@ -1,22 +1,10 @@
 # DNS Lookup Tool
 [![Stars](https://img.shields.io/github/stars/Jvr2022/Dns-lookup)](https://github.com/Jvr2022/Dns-lookup/stargazers) [![License](https://img.shields.io/github/license/Jvr2022/Dns-lookup)](https://github.com/Jvr2022/Dns-lookup/blob/main/LICENSE) [![Issues](https://img.shields.io/github/issues/Jvr2022/Dns-lookup)](https://github.com/Jvr2022/Dns-lookup/issues) [![Forks](https://img.shields.io/github/forks/Jvr2022/Dns-lookup)](https://github.com/Jvr2022/Dns-lookup/network/members)
 
+> [!WARNING]  
+> This project was deprecated on January 1, 2024. We have now resumed updates for this tool as of June 11, 2024. During this transition period, some features may not function as expected. We appreciate your patience and understanding as we work to improve and enhance the tool.
+
 Welcome to the DNS Lookup Tool repository! This tool allows you to perform various DNS-related queries for domain names. Explore the provided functionalities and stay tuned for further updates and enhancements as the project evolves.
-
-## Features
-
-- [x] Perform DNS lookups for domain names.
-- [x] View IP addresses associated with a domain.
-- [x] Retrieve MX records for email server information.
-- [x] Fast and reliable DNS queries.
-- [x] Geolocation of IP addresses.
-- [x] Reverse DNS lookup for IP addresses.
-- [x] Check domain availability.
-- [x] Identify DNS propagation status.
-- [x] Export query results to a file.
-- [x] Support for custom DNS servers.
-- [x] DNSSEC validation status.
-- [x] Comprehensive error handling and reporting.
 
 ## Installation Guide
 
@@ -45,7 +33,7 @@ In addition to the main script `dns_lookup.py`, this repository includes a `tool
 - `mx_records.py`: Retrieve MX records for email server information.
 - `geolocation.py`: Geolocation of IP addresses.
 - `reverse_dns.py`: Reverse DNS lookup for IP addresses.
-- `Check_domain_ability.py`: Check domain availability.
+- `check_domain_availability.py`: Check domain availability.
 
 To use any of these scripts individually, navigate to the `tools` directory in your terminal and run the desired script using the `python` command.
 
